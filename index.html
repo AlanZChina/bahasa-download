@@ -25,7 +25,13 @@ body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system
 .step.done .num{background:var(--ok);color:#fff}
 .step .body{flex:1;min-width:0}
 .step .body .btn{height:50px}
-.step.done .btn{background:#eef1f6;color:var(--sub)}
+.step.done .btn{background:#eef1f6;color:var(--sub);height:40px;font-size:14px}
+.step.done .hint{display:none}
+.step.wait .btn{background:#eef1f6;color:#9aa1ad}
+.step.wait .hint{display:none}
+.step.cur .num{background:var(--blue);color:#fff}
+.step.cur .btn{height:56px;font-size:17px;box-shadow:0 6px 16px rgba(47,107,255,.25)}
+.again{display:block;margin:12px auto 0;background:none;border:0;color:var(--sub);font-size:13px;text-decoration:underline}
 .step .hint{margin:6px 2px 0;color:var(--sub);font-size:13px}
 .foot{margin-top:6px;color:var(--sub);font-size:13px;text-align:center}
 .order-ios .android{order:2}.order-ios .ios{order:1}
@@ -50,18 +56,19 @@ body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system
   <div class="list" id="list">
     <section class="card android">
       <h2>安卓手机 <span class="tag">内测中</span></h2>
-      <p class="note">要有 Google 账号，Play 商店的国家要是印尼。按顺序点，每步做完回到这页点下一步。</p>
+      <p class="note">要有 Google 账号，Play 商店的国家要是印尼。只扫一次码，跟着蓝色按钮一步步点，做完按返回键回到这页。</p>
       <ol class="steps">
         <li class="step" data-s="1"><div class="num">1</div><div class="body">
-          <a class="btn" href="https://groups.google.com/g/bahasa-app-testers" target="_blank" rel="noopener">加入测试群组</a>
-          <p class="hint">打开后点「加入群组」，再点一次确认</p></div></li>
+          <a class="btn" href="https://groups.google.com/g/bahasa-app-testers">加入测试群组</a>
+          <p class="hint">点「加入群组」，再点一次确认，然后按手机的<b>返回键</b>回到这页</p></div></li>
         <li class="step" data-s="2"><div class="num">2</div><div class="body">
-          <a class="btn" href="https://play.google.com/apps/testing/com.ezcode.bahasa" target="_blank" rel="noopener">成为测试人员</a>
-          <p class="hint">打开后点「成为测试人员」</p></div></li>
+          <a class="btn" href="https://play.google.com/apps/testing/com.ezcode.bahasa">成为测试人员</a>
+          <p class="hint">点「成为测试人员」，再点页面里的「在 Google Play 上下载」就能直接安装</p></div></li>
         <li class="step" data-s="3"><div class="num">3</div><div class="body">
-          <a class="btn" href="https://play.google.com/store/apps/details?id=com.ezcode.bahasa" target="_blank" rel="noopener">去 Play 商店安装</a>
-          <p class="hint">没看到「安装」就过 10 分钟再点一次</p></div></li>
+          <a class="btn" href="https://play.google.com/store/apps/details?id=com.ezcode.bahasa">去 Play 商店安装</a>
+          <p class="hint">上一步已经装好就不用点；没看到「安装」，过 10 分钟再点</p></div></li>
       </ol>
+      <button class="again" id="again" hidden>从第 1 步重新来</button>
     </section>
 
     <section class="card ios">
@@ -91,12 +98,24 @@ body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system
   var done = {}
   try { done = JSON.parse(localStorage.getItem(KEY) || '{}') || {} } catch (e) {}
   var steps = document.querySelectorAll('.step')
-  function paint() { for (var i = 0; i < steps.length; i++) steps[i].className = 'step' + (done[steps[i].getAttribute('data-s')] ? ' done' : '') }
+  function paint() {
+    var cur = 0
+    for (var i = 0; i < steps.length; i++) {
+      var k = steps[i].getAttribute('data-s'), st = 'wait'
+      if (done[k]) st = 'done'
+      else if (!cur) { st = 'cur'; cur = 1 }
+      steps[i].className = 'step ' + st
+    }
+    document.getElementById('again').hidden = !done['1']
+  }
+  // 从 Google 的页面按返回键回来（浏览器可能直接拿缓存的旧页面），重新排一次
+  window.addEventListener('pageshow', function () { try { done = JSON.parse(localStorage.getItem(KEY) || '{}') || {} } catch (e) {} paint() })
+  document.getElementById('again').addEventListener('click', function () { done = {}; try { localStorage.removeItem(KEY) } catch (e) {} paint() })
   for (var i = 0; i < steps.length; i++) (function (el) {
     el.querySelector('a').addEventListener('click', function () {
       done[el.getAttribute('data-s')] = 1
       try { localStorage.setItem(KEY, JSON.stringify(done)) } catch (e) {}
-      setTimeout(paint, 300)
+      paint()
     })
   })(steps[i])
   paint()
