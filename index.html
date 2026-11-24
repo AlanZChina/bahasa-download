@@ -36,6 +36,9 @@ body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system
 .foot{margin-top:6px;color:var(--sub);font-size:13px;text-align:center}
 .order-ios .android{order:2}.order-ios .ios{order:1}
 .list{display:flex;flex-direction:column}
+.apk{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.apk-t{margin:0 0 10px;font-size:14px;font-weight:600}
+.apk .hint{margin:8px 2px 0;color:var(--sub);font-size:13px}
 /* 微信里打开：提示去浏览器 */
 .wx{position:fixed;inset:0;background:rgba(10,14,20,.82);color:#fff;display:none;z-index:9;padding:calc(18px + env(safe-area-inset-top)) 22px}
 .wx.on{display:block}
@@ -69,6 +72,11 @@ body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system
           <p class="hint">上一步已经装好就不用点；没看到「安装」，过 10 分钟再点</p></div></li>
       </ol>
       <button class="again" id="again" hidden>从第 1 步重新来</button>
+      <div class="apk">
+        <p class="apk-t">没有 Google 账号，或者上面装不了？</p>
+        <a class="btn ghost" href="https://github.com/AlanZChina/bahasa-download/releases/latest/download/Bahasa.apk">直接下载安装包（APK）</a>
+        <p class="hint">下载完点开安装，手机提示「未知来源」就选允许。已经从 Play 装好的不用下。</p>
+      </div>
     </section>
 
     <section class="card ios">
