@@ -1,6 +1,13 @@
 {
-  "versionCode": 6,
-  "versionName": "1.5",
-  "notes": [],
+  "versionCode": 7,
+  "versionName": "1.6",
+  "notes": [
+    "「关于我们」新增系统版本和检查更新",
+    "复习记录网络不好也不丢，联网后自动补上",
+    "统计页「已复习」复习完马上更新",
+    "排位：每过一个词 +4，结算按倍率滚分",
+    "单词本搜索：词的一部分也能搜到",
+    "拼写题上一题打的字不再留到下一题"
+  ],
   "apk": "https://github.com/AlanZChina/bahasa-download/releases/latest/download/Bahasa.apk"
 }
